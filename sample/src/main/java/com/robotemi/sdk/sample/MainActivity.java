@@ -1,8 +1,5 @@
 package com.robotemi.sdk.sample;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,19 +10,18 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.util.Log;
 import android.os.Environment;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.robotemi.sdk.BatteryData;
 import com.robotemi.sdk.MediaObject;
@@ -157,8 +153,9 @@ public class MainActivity extends AppCompatActivity implements
      * Have the robot speak while displaying what is being said.
      */
     public void speak(View view) {
-        TtsRequest ttsRequest = TtsRequest.create(etSpeak.getText().toString().trim(), true);
-        robot.speak(ttsRequest);
+//        TtsRequest ttsRequest = TtsRequest.create(etSpeak.getText().toString().trim(), true);
+//        robot.speak(this);
+        MapActivity.Companion.startActivity(this);
         hideKeyboard(MainActivity.this);
     }
 
@@ -373,9 +370,13 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    public void hideTopBar(View view) { robot.hideTopBar(); }
+    public void hideTopBar(View view) {
+        robot.hideTopBar();
+    }
 
-    public void showTopBar(View view) { robot.showTopBar(); }
+    public void showTopBar(View view) {
+        robot.showTopBar();
+    }
 
     @Override
     public void onWakeupWord(String wakeupWord) {

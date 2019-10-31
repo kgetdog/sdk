@@ -55,6 +55,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+                android:name=".MapActivity"
+                android:screenOrientation="landscape" />
+
     </application>
 
 </manifest>

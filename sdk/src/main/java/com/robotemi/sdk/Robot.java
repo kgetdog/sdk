@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.UiThread;
 
+import com.github.swrirobotics.bags.reader.exceptions.BagReaderException;
 import com.robotemi.sdk.activitystream.ActivityStreamObject;
 import com.robotemi.sdk.activitystream.ActivityStreamPublishMessage;
 import com.robotemi.sdk.activitystream.ActivityStreamUtils;
@@ -27,6 +28,7 @@ import com.robotemi.sdk.listeners.OnRobotReadyListener;
 import com.robotemi.sdk.listeners.OnTelepresenceStatusChangedListener;
 import com.robotemi.sdk.listeners.OnUsersUpdatedListener;
 import com.robotemi.sdk.listeners.OnWelcomingModeStatusChangedListener;
+import com.robotemi.sdk.map.RosUtils;
 import com.robotemi.sdk.mediabar.AidlMediaBarController;
 import com.robotemi.sdk.mediabar.MediaBarData;
 import com.robotemi.sdk.model.RecentCallModel;
@@ -71,6 +73,8 @@ public class Robot {
 
     @NonNull
     private final Set<ConversationViewAttachesListener> conversationViewAttachesListeners = new CopyOnWriteArraySet<>();
+
+    private final MapListener mapListener = null;
 
     @NonNull
     private final Set<TtsListener> ttsListeners = new CopyOnWriteArraySet<>();
@@ -477,6 +481,14 @@ public class Robot {
             }
         } catch (RemoteException e) {
             Log.e(TAG, "Failed to invoke remote call speak()", e);
+        }
+    }
+
+    public void speak2(@NonNull final MapListener mapListener) {
+        try {
+            RosUtils.readBag(mapListener);
+        } catch (BagReaderException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1075,7 +1087,7 @@ public class Robot {
 
     public String getWakeupWord() {
         Log.d(TAG, "getWakeupWord()");
-        if(sdkService != null) {
+        if (sdkService != null) {
             try {
                 return sdkService.getWakeupWord();
             } catch (RemoteException e) {
@@ -1091,6 +1103,10 @@ public class Robot {
 
     public interface TtsListener {
         void onTtsStatusChanged(TtsRequest ttsRequest);
+    }
+
+    public interface MapListener {
+        void onMap(byte[] mapBytes, int width, int height);
     }
 
     public interface NlpListener {

@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 28
@@ -49,7 +51,10 @@ dependencies {
 
     // temi SDK
 //    implementation 'com.robotemi:sdk-usa:0.10.43.11-SNAPSHOT'   // for USA version
-    project(":sdk")
-    compile project(path: ':sdk')
-//    compile project(path: ':sdk')
+    implementation project(path: ':sdk')
+    compile "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

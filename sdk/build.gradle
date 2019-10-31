@@ -53,6 +53,17 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation files('libs/bag-reader-java-1.10.2.jar')
+    implementation files('libs/commons-codec-1.12.jar')
+    implementation files('libs/commons-compress-1.18.jar')
+    implementation files('libs/guava-18.0.jar')
+    implementation files('libs/jackson-annotations-2.9.0.jar')
+    implementation files('libs/jackson-core-2.9.9.jar')
+    implementation files('libs/jackson-databind-2.9.9.1.jar')
+    implementation files('libs/logback-classic-1.1.11.jar')
+    implementation files('libs/logback-core-1.1.11.jar')
+    implementation files('libs/lz4-1.5.0.jar')
+    implementation files('libs/slf4j-api-1.7.26.jar')
 }
 
 apply from: rootProject.file('gradle/mvn-push.gradle')
