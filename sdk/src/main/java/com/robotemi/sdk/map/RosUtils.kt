@@ -8,12 +8,16 @@ import com.github.swrirobotics.bags.reader.messages.serialization.ArrayType
 import com.github.swrirobotics.bags.reader.messages.serialization.MessageType
 import com.github.swrirobotics.bags.reader.messages.serialization.UInt32Type
 import com.robotemi.sdk.Robot
-import java.io.File
+import java.io.*
+import org.apache.commons.compress.utils.IOUtils
+import org.ros.math.RosMath
 
 
 open class RosUtils {
     companion object {
+
         private const val TAG: String = "RosUtils"
+
         @Throws(BagReaderException::class)
         @JvmStatic
         fun readBag(mapListener: Robot.MapListener) {
@@ -31,6 +35,46 @@ open class RosUtils {
                         .value.toInt()
                 mapListener.onMap(bytes, width, height)
                 true
+            }
+        }
+
+        @JvmStatic
+        fun test(){
+            val file =
+                File(Environment.getExternalStoragePublicDirectory("temi").path + File.separator + "serialized_map.txt")
+
+            val size = file.length().toInt()
+            val bytes = ByteArray(size)
+            val buf = null
+            try {
+                val buf = BufferedInputStream(FileInputStream(file))
+                buf.read(bytes, 0, bytes.size)
+
+                val obuf = IOUtils.toByteArray(buf)
+                var Od: Any? = null
+                try {
+                    val s: ObjectInputStream
+                    val bais = ByteArrayInputStream(obuf)
+                    //ReadableByteChannel rbc = Channels.newChannel(bais);
+                    s = ObjectInputStream(bais/*Channels.newInputStream(rbc)*/)
+                    Od = s.readObject()
+                    s.close()
+                    bais.close()
+                    buf.close()
+                    //rbc.close();
+                } catch (cnf: IOException) {
+                    Log.e(TAG, "Class cannot be deserialized, may have been modified beyond version compatibility")
+                } catch (cnf: ClassNotFoundException) {
+                    Log.e(TAG, "Class cannot be deserialized, may have been modified beyond version compatibility")
+                }
+
+                Log.e(TAG, "Deserialize return:" + Od!!)
+            } catch (e: FileNotFoundException) {
+                // TODO Auto-generated catch block
+                e.printStackTrace()
+            } catch (e: IOException) {
+                // TODO Auto-generated catch block
+                e.printStackTrace()
             }
         }
     }

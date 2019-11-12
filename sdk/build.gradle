@@ -64,6 +64,8 @@ dependencies {
     implementation files('libs/logback-core-1.1.11.jar')
     implementation files('libs/lz4-1.5.0.jar')
     implementation files('libs/slf4j-api-1.7.26.jar')
+
+    implementation 'org.ros.android_core:android_core_components:0.4.0'
 }
 
 apply from: rootProject.file('gradle/mvn-push.gradle')

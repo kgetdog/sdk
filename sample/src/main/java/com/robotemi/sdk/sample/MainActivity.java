@@ -34,6 +34,7 @@ import com.robotemi.sdk.listeners.OnBeWithMeStatusChangedListener;
 import com.robotemi.sdk.listeners.OnGoToLocationStatusChangedListener;
 import com.robotemi.sdk.listeners.OnLocationsUpdatedListener;
 import com.robotemi.sdk.listeners.OnRobotReadyListener;
+import com.robotemi.sdk.map.RosUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -155,7 +156,8 @@ public class MainActivity extends AppCompatActivity implements
     public void speak(View view) {
 //        TtsRequest ttsRequest = TtsRequest.create(etSpeak.getText().toString().trim(), true);
 //        robot.speak(this);
-        MapActivity.Companion.startActivity(this);
+//        MapActivity.Companion.startActivity(this);
+        RosUtils.test();
         hideKeyboard(MainActivity.this);
     }
 
