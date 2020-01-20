@@ -8,6 +8,8 @@ import com.robotemi.sdk.telepresence.CallState;
 import com.robotemi.sdk.NlpResult;
 import com.robotemi.sdk.TtsRequest;
 import com.robotemi.sdk.BatteryData;
+import com.robotemi.sdk.map.MapModel;
+import com.robotemi.sdk.map.CurrentPoseModel;
 
 interface ISdkServiceCallback {
 
@@ -54,4 +56,8 @@ interface ISdkServiceCallback {
     boolean onDetectionStateChanged(in int state);
 
     boolean onAsrResult(in String asrText);
+
+    boolean onMapFetched(in MapModel mapModel);
+
+    boolean onPoseUpdated(in CurrentPoseModel currentPoseModel);
 }

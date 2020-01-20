@@ -1,5 +1,6 @@
 package com.robotemi.sdk
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
@@ -16,18 +17,21 @@ import androidx.annotation.UiThread
 import com.robotemi.sdk.activitystream.ActivityStreamObject
 import com.robotemi.sdk.activitystream.ActivityStreamPublishMessage
 import com.robotemi.sdk.activitystream.ActivityStreamUtils
-import com.robotemi.sdk.telepresence.CallState
-import com.robotemi.sdk.model.RecentCallModel
 import com.robotemi.sdk.constants.SdkConstants
 import com.robotemi.sdk.listeners.*
+import com.robotemi.sdk.map.CurrentPoseModel
+import com.robotemi.sdk.map.MapModel
 import com.robotemi.sdk.mediabar.AidlMediaBarController
 import com.robotemi.sdk.mediabar.MediaBarData
+import com.robotemi.sdk.model.RecentCallModel
 import com.robotemi.sdk.notification.AlertNotification
 import com.robotemi.sdk.notification.NormalNotification
 import com.robotemi.sdk.notification.NotificationCallback
+import com.robotemi.sdk.telepresence.CallState
 import java.util.*
 import java.util.concurrent.CopyOnWriteArraySet
 
+@SuppressLint("LogNotTimber")
 @SuppressWarnings("unused")
 class Robot private constructor(context: Context) {
 
@@ -83,6 +87,10 @@ class Robot private constructor(context: Context) {
 
     private val onDetectionStateChangedListeners =
         CopyOnWriteArraySet<OnDetectionStateChangedListener>()
+
+    private val onMapFetchedListeners = CopyOnWriteArraySet<OnMapFetchedListener>()
+
+    private val onCurrentPoseFetchedListeners = CopyOnWriteArraySet<OnCurrentPoseFetchedListener>()
 
     private var activityStreamPublishListener: ActivityStreamPublishListener? = null
 
@@ -165,8 +173,7 @@ class Robot private constructor(context: Context) {
         }
 
         override fun hasActiveNlpListeners(): Boolean {
-            val hasActiveNlpListener = !nlpListeners.isEmpty()
-            return hasActiveNlpListener
+            return !nlpListeners.isEmpty()
         }
 
         /*****************************************/
@@ -308,6 +315,30 @@ class Robot private constructor(context: Context) {
             return false
         }
 
+        override fun onMapFetched(mapModel: MapModel?): Boolean {
+            if (onMapFetchedListeners.size > 0) {
+                uiHandler.post {
+                    for (listener in onMapFetchedListeners) {
+                        listener.onMapFetched(mapModel)
+                    }
+                }
+                return true
+            }
+            return false
+        }
+
+        override fun onPoseUpdated(currentPoseModel: CurrentPoseModel?): Boolean {
+            if (onCurrentPoseFetchedListeners.size > 0) {
+                uiHandler.post {
+                    for (listener in onCurrentPoseFetchedListeners) {
+                        listener.onPoseFetched(currentPoseModel!!)
+                    }
+                }
+                return true
+            }
+            return false
+        }
+
         /*****************************************/
         /*            Activity Stream            */
         /*****************************************/
@@ -355,7 +386,7 @@ class Robot private constructor(context: Context) {
         }
 
         /*****************************************/
-        /*             Detection Mode            */
+        /*        Detection & Interaction        */
         /*****************************************/
 
         override fun onUserInteractionStatusChanged(isInteracting: Boolean): Boolean {
@@ -573,13 +604,13 @@ class Robot private constructor(context: Context) {
     }
 
     @UiThread
-    fun removeAsrListener(asrListener: AsrListener) {
-        asrListeners.remove(asrListener)
+    fun addAsrListener(asrListener: AsrListener) {
+        asrListeners.add(asrListener)
     }
 
     @UiThread
-    fun addAsrListener(asrListener: AsrListener) {
-        asrListeners.add(asrListener)
+    fun removeAsrListener(asrListener: AsrListener) {
+        asrListeners.remove(asrListener)
     }
 
     /*****************************************/
@@ -637,6 +668,18 @@ class Robot private constructor(context: Context) {
             return emptyList()
         }
 
+    val locationsInfo: List<Location>
+        get() {
+            sdkService?.let {
+                try {
+                    return it.locationsInfo ?: emptyList()
+                } catch (e: RemoteException) {
+                    Log.e(TAG, "getLocations()")
+                }
+            }
+            return emptyList()
+        }
+
     /**
      * Send robot to previously saved location.
      *
@@ -649,6 +692,16 @@ class Robot private constructor(context: Context) {
                 it.goTo(location)
             } catch (e: RemoteException) {
                 Log.e(TAG, "goTo(String) error.")
+            }
+        }
+    }
+
+    fun goToCoordinate(x: Float, y: Float) {
+        sdkService?.let {
+            try {
+                it.goToCoordinate(x, y)
+            } catch (e: RemoteException) {
+                Log.e(TAG, "goToCoordinate(int, int) error.")
             }
         }
     }
@@ -899,7 +952,10 @@ class Robot private constructor(context: Context) {
             try {
                 return it.startTelepresence(displayName, peerId) ?: ""
             } catch (e: RemoteException) {
-                Log.e(TAG, "startTelepresence(String, String) (displayName=$displayName, peerId=$peerId)")
+                Log.e(
+                    TAG,
+                    "startTelepresence(String, String) (displayName=$displayName, peerId=$peerId)"
+                )
             }
 
         }
@@ -1168,7 +1224,10 @@ class Robot private constructor(context: Context) {
                     Log.e(TAG, "toggleNavigationBillboard() error.")
                 }
             } else {
-                Log.e(TAG, "toggleNavigationBillboard() Billboard can only be toggled in Kiosk Mode")
+                Log.e(
+                    TAG,
+                    "toggleNavigationBillboard() Billboard can only be toggled in Kiosk Mode"
+                )
             }
         }
     }
@@ -1195,6 +1254,48 @@ class Robot private constructor(context: Context) {
         }
     }
 
+    /*****************************************/
+    /*            Map           */
+    /*****************************************/
+    fun fetchMap() {
+        sdkService?.let {
+            try {
+                it.fetchMap()
+            } catch (e: RemoteException) {
+                Log.e(TAG, "fetchMap)")
+            }
+        }
+    }
+
+    fun getCurrentPose() {
+        sdkService?.let {
+            try {
+                it.getCurrentPose()
+            } catch (e: RemoteException) {
+                Log.e(TAG, "fetchMap)")
+            }
+        }
+    }
+
+    @UiThread
+    fun addOnMapFetchListener(listener: OnMapFetchedListener) {
+        onMapFetchedListeners.add(listener)
+    }
+
+    @UiThread
+    fun removeOnMapFetchListener(listener: OnMapFetchedListener) {
+        onMapFetchedListeners.remove(listener)
+    }
+
+    @UiThread
+    fun addOnCurrentPoseFetchedListener(listener: OnCurrentPoseFetchedListener) {
+        onCurrentPoseFetchedListeners.add(listener)
+    }
+
+    @UiThread
+    fun removeOnCurrentPoseFetchedListener(listener: OnCurrentPoseFetchedListener) {
+        onCurrentPoseFetchedListeners.remove(listener)
+    }
     /*****************************************/
     /*                 Media                 */
     /*****************************************/
@@ -1224,17 +1325,17 @@ class Robot private constructor(context: Context) {
     }
 
     /*****************************************/
-    /*             Detection Mode            */
+    /*        Detection & Interaction        */
     /*****************************************/
 
     @UiThread
     fun addOnUserInteractionChangedListener(listener: OnUserInteractionChangedListener) {
-        onUserInteractionChangedListeners.add(listener);
+        onUserInteractionChangedListeners.add(listener)
     }
 
     @UiThread
     fun removeOnUserInteractionChangedListener(listener: OnUserInteractionChangedListener) {
-        onUserInteractionChangedListeners.remove(listener);
+        onUserInteractionChangedListeners.remove(listener)
     }
 
     @UiThread
@@ -1292,15 +1393,15 @@ class Robot private constructor(context: Context) {
 
     companion object {
 
-        val DEFAULT_ACTION = "skill.default"
+        const val DEFAULT_ACTION = "skill.default"
 
-        val PAUSE = "reserved.pauseMediaBar"
+        const val PAUSE = "reserved.pauseMediaBar"
 
-        val STOP = "reserved.stop"
+        const val STOP = "reserved.stop"
 
-        val RESUME = "reserved.resume"
+        const val RESUME = "reserved.resume"
 
-        private val TAG = "Robot"
+        private const val TAG = "Robot"
 
         private var instance: Robot? = null
 

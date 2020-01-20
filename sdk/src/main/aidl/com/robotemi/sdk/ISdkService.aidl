@@ -12,6 +12,7 @@ import com.robotemi.sdk.mediabar.MediaBarData;
 import com.robotemi.sdk.UserInfo;
 import com.robotemi.sdk.model.RecentCallModel;
 import com.robotemi.sdk.BatteryData;
+import com.robotemi.sdk.Location;
 
 interface ISdkService {
 
@@ -182,4 +183,18 @@ interface ISdkService {
     void toggleHardButtons(in boolean enabled);
 
     boolean isHardButtonsEnabled();
+
+    void goToCoordinate(in float x, in float y);
+
+    /**
+    * Retrieve list of previously saved locations.
+    *
+    * @return List of saved locations with their info.
+    */
+    List<Location> getLocationsInfo();
+
+    void fetchMap();
+
+    void getCurrentPose();
+
 }
