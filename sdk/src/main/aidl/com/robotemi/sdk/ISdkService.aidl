@@ -180,9 +180,9 @@ interface ISdkService {
 
     void constraintBeWith();
 
-    void toggleHardButtons(in boolean enabled);
+    void toggleHardButtons(in boolean disable);
 
-    boolean isHardButtonsEnabled();
+    boolean isHardButtonsDisabled();
 
     void goToCoordinate(in float x, in float y);
 
@@ -196,5 +196,4 @@ interface ISdkService {
     void fetchMap();
 
     void getCurrentPose();
-
 }
