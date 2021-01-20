@@ -318,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements
 
         /////
         ///
+        //
         TtsRequest ttsRequest = TtsRequest.create(etSpeak.getText().toString().trim(), true);
         robot.speak(ttsRequest);
         hideKeyboard();
