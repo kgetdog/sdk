@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    private EditText etSpeak, etSaveLocation, etGoTo, etDistance, etX, etY, etYaw, etNlu;
+    private EditText etSpeak, etSaveLocation, etGoTo,etGoTonext, etDistance, etX, etY, etYaw, etNlu;
 
     private List<String> locations;
 
@@ -294,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements
         etSpeak = findViewById(R.id.etSpeak);
         etSaveLocation = findViewById(R.id.etSaveLocation);
         etGoTo = findViewById(R.id.etGoTo);
+        etGoTonext= findViewById(R.id.etGoTonext);
         etDistance = findViewById(R.id.etDistance);
         tvLog = findViewById(R.id.tvLog);
         tvLog.setMovementMethod(new ScrollingMovementMethod());
@@ -323,24 +324,8 @@ public class MainActivity extends AppCompatActivity implements
         //
         ///
         ////
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        BatteryData batteryData = robot.getBatteryData();
-        if (batteryData == null) {
-            printLog("getBatteryData()", "batteryData is null");
-            return;
-        }
-        if (batteryData.isCharging()) {
-            TtsRequest tts2Request = TtsRequest.create(batteryData.getBatteryPercentage() + " percent battery and charging.", true);
-            robot.speak(tts2Request);
-        } else {
-            TtsRequest tts2Request = TtsRequest.create(batteryData.getBatteryPercentage() + " percent battery and not charging.", true);
-            robot.speak(tts2Request);
-        }
+
     }
 
     /**
@@ -361,6 +346,7 @@ public class MainActivity extends AppCompatActivity implements
      * goTo checks that the location sent is saved then goes to that location.
      */
     public void goTo(View view) {
+        nu=0;
         for (String location : robot.getLocations()) {
             if (location.equals(etGoTo.getText().toString().toLowerCase().trim())) {
                 nu++;
@@ -370,7 +356,9 @@ public class MainActivity extends AppCompatActivity implements
                 hideKeyboard();
             }
         }
+
         System.out.println("this is test text!!!!git test ahah"+a);
+
 
         try {
             Thread.sleep(5000);
@@ -641,12 +629,19 @@ public class MainActivity extends AppCompatActivity implements
 
             case OnGoToLocationStatusChangedListener.COMPLETE:
                 robot.speak(TtsRequest.create("Completed", true));
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 if(nu<2) {
                     for (String location2 : robot.getLocations()) {
-                        if (location2.equals(etSpeak.getText().toString().toLowerCase().trim())) {
+                        if (location2.equals(etGoTonext.getText().toString().toLowerCase().trim())) {
                             nu++;
 
-                            robot.goTo(etSpeak.getText().toString().toLowerCase().trim());
+                            robot.goTo(etGoTonext.getText().toString().toLowerCase().trim());
 
                             hideKeyboard();
                         }
