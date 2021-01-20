@@ -370,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements
                 hideKeyboard();
             }
         }
-        System.out.println("this is test text!!!!"+a);
+        System.out.println("this is test text!!!!git test ahah"+a);
 
         try {
             Thread.sleep(5000);
