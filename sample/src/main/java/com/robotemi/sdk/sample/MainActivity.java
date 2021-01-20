@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    private EditText etSpeak, etSaveLocation, etGoTo,etGoTonext, etDistance, etX, etY, etYaw, etNlu;
+    private EditText etSpeak, etSpeak2,etSaveLocation, etGoTo,etGoTonext, etDistance, etX, etY, etYaw, etNlu;
 
     private List<String> locations;
 
@@ -292,6 +292,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public void initViews() {
         etSpeak = findViewById(R.id.etSpeak);
+        etSpeak2 = findViewById(R.id.etSpeak2);
+
         etSaveLocation = findViewById(R.id.etSaveLocation);
         etGoTo = findViewById(R.id.etGoTo);
         etGoTonext= findViewById(R.id.etGoTonext);
@@ -633,6 +635,21 @@ public class MainActivity extends AppCompatActivity implements
 
                 try {
                     Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(nu==1) {
+                    TtsRequest ttsRequest = TtsRequest.create(etSpeak.getText().toString().trim(), true);
+                    robot.speak(ttsRequest);
+                    hideKeyboard();
+                }
+                if(nu==2){
+                    TtsRequest ttsRequest = TtsRequest.create(etSpeak2.getText().toString().trim(), true);
+                    robot.speak(ttsRequest);
+                    hideKeyboard();
+                }
+                try {
+                    Thread.sleep(7000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
