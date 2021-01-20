@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.RemoteException;
+import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -151,6 +153,13 @@ public class MainActivity extends AppCompatActivity implements
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private TtsVisualizerView ttsVisualizerView;
+
+    public String a,b,c;
+
+    public int nu;
+
+
+
 
     /**
      * Hiding keyboard after every button press
@@ -296,13 +305,42 @@ public class MainActivity extends AppCompatActivity implements
         ttsVisualizerView = findViewById(R.id.visualizerView);
     }
 
+
+
     /**
      * Have the robot speak while displaying what is being said.
      */
     public void speak(View view) {
+
+
+
+
+        /////
+        ///
         TtsRequest ttsRequest = TtsRequest.create(etSpeak.getText().toString().trim(), true);
         robot.speak(ttsRequest);
         hideKeyboard();
+        //
+        ///
+        ////
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        BatteryData batteryData = robot.getBatteryData();
+        if (batteryData == null) {
+            printLog("getBatteryData()", "batteryData is null");
+            return;
+        }
+        if (batteryData.isCharging()) {
+            TtsRequest tts2Request = TtsRequest.create(batteryData.getBatteryPercentage() + " percent battery and charging.", true);
+            robot.speak(tts2Request);
+        } else {
+            TtsRequest tts2Request = TtsRequest.create(batteryData.getBatteryPercentage() + " percent battery and not charging.", true);
+            robot.speak(tts2Request);
+        }
     }
 
     /**
@@ -325,10 +363,21 @@ public class MainActivity extends AppCompatActivity implements
     public void goTo(View view) {
         for (String location : robot.getLocations()) {
             if (location.equals(etGoTo.getText().toString().toLowerCase().trim())) {
+                nu++;
+
                 robot.goTo(etGoTo.getText().toString().toLowerCase().trim());
+
                 hideKeyboard();
             }
         }
+        System.out.println("this is test text!!!!"+a);
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -344,6 +393,15 @@ public class MainActivity extends AppCompatActivity implements
      * Simple follow me example.
      */
     public void followMe(View view) {
+        TtsRequest ttsRequest = TtsRequest.create("yes i follow you, master", true);
+        robot.speak(ttsRequest);
+        //hideKeyboard();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         robot.beWithMe();
         hideKeyboard();
     }
@@ -582,7 +640,20 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
             case OnGoToLocationStatusChangedListener.COMPLETE:
-                robot.speak(TtsRequest.create("Completed", false));
+                robot.speak(TtsRequest.create("Completed", true));
+                if(nu<2) {
+                    for (String location2 : robot.getLocations()) {
+                        if (location2.equals(etSpeak.getText().toString().toLowerCase().trim())) {
+                            nu++;
+
+                            robot.goTo(etSpeak.getText().toString().toLowerCase().trim());
+
+                            hideKeyboard();
+                        }
+                    }
+                }
+
+
                 break;
 
             case OnGoToLocationStatusChangedListener.ABORT:
@@ -1114,7 +1185,38 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void startNlu(View view) {
-        robot.startDefaultNlu(etNlu.getText().toString());
+        robot.startDefaultNlu(etNlu.getText().toString());  // this is startNlu original code 나머지는 다 수정 한것
+
+
+        try{
+            Thread.sleep(5000);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+
+
+        BatteryData batteryData = robot.getBatteryData();
+        if (batteryData == null) {
+            printLog("getBatteryData()", "batteryData is null");
+            return;
+        }
+        if (batteryData.isCharging()) {
+            TtsRequest ttsRequest = TtsRequest.create(batteryData.getBatteryPercentage() + " percent battery and charging.", true);
+            robot.speak(ttsRequest);
+        } else {
+            TtsRequest ttsRequest = TtsRequest.create(batteryData.getBatteryPercentage() + " percent battery and not charging.", true);
+            robot.speak(ttsRequest);
+        }
+        try{
+            Thread.sleep(5000);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+
+        //
+
+
+
     }
 
     @Override

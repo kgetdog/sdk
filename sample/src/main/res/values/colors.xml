@@ -9,6 +9,16 @@
     <color name="colorBlack">#212121</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGrey">#bdbdbd</color>
+    <color name="lavender">#E6E6FA</color>
+    <color name="mintcream">#F5FFFA</color>
+    <color name="pink">#FFC0CB</color>
+    <color name="mistyrose">#FFE4E1</color>
+    <color name="azure">#F0FFFF</color>
+    <color name="lightcyan">#E0FFFF</color>
+    <color name="lavenderblush">#FFF0F5</color>
+
+
+    <color name="deepskyblue">#00BFFF</color>
 
     <color name="temi_primary_green">#20d199</color>
     <color name="temi_primary_green_80">#cc20d199</color>
