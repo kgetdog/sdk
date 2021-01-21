@@ -90,6 +90,10 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * 2021-01-21 vol_1
+ */
+
 
 public class MainActivity extends AppCompatActivity implements
         Robot.NlpListener,
@@ -138,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    private EditText etSpeak, etSpeak2,etSaveLocation, etGoTo,etGoTonext, etDistance, etX, etY, etYaw, etNlu;
+    private EditText etSpeak, etSpeak2,etSaveLocation, etGoTo,etGoTo2, etDistance, etX, etY, etYaw, etNlu;
 
     private List<String> locations;
 
@@ -296,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements
 
         etSaveLocation = findViewById(R.id.etSaveLocation);
         etGoTo = findViewById(R.id.etGoTo);
-        etGoTonext= findViewById(R.id.etGoTonext);
+        etGoTo2= findViewById(R.id.etGoTo2);
         etDistance = findViewById(R.id.etDistance);
         tvLog = findViewById(R.id.tvLog);
         tvLog.setMovementMethod(new ScrollingMovementMethod());
@@ -360,14 +364,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-        System.out.println("this is test text!!!!git test ahah"+a);
 
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -404,18 +401,25 @@ public class MainActivity extends AppCompatActivity implements
      */
     public void skidJoy(View view) {
         long t = System.currentTimeMillis();
-        long end = t + 1000;
+        long end = t + 70;
         while (System.currentTimeMillis() < end) {
-            robot.skidJoy(1F, 0F);
+            robot.skidJoy(0.05F, 0F);
+        }
+    }
+    public void skidJoy2(View view){
+        long t = System.currentTimeMillis();
+        long end = t + 300;
+        while (System.currentTimeMillis() < end) {
+            robot.skidJoy(-1F, 0F);
         }
     }
 
     /**
      * tiltAngle controls temi's head by specifying which angle you want
-     * to tilt to and at which speed.
+     * to tilt to and at which speed. 23
      */
     public void tiltAngle(View view) {
-        robot.tiltAngle(23);
+        robot.tiltAngle(10);
     }
 
     /**
@@ -423,14 +427,18 @@ public class MainActivity extends AppCompatActivity implements
      * the amount of degrees to turn by and at which speed.
      */
     public void turnBy(View view) {
-        robot.turnBy(180);
+        robot.turnBy(15);
     }
+    public void turnBy2(View view) {
+        robot.turnBy(-15);
+    }
+
 
     /**
      * tiltBy is used to tilt temi's head from its current position.
      */
     public void tiltBy(View view) {
-        robot.tiltBy(70);
+        robot.tiltBy(15);
     }
 
     /**
@@ -649,21 +657,22 @@ public class MainActivity extends AppCompatActivity implements
                     hideKeyboard();
                 }
                 try {
-                    Thread.sleep(7000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
                 if(nu<2) {
                     for (String location2 : robot.getLocations()) {
-                        if (location2.equals(etGoTonext.getText().toString().toLowerCase().trim())) {
+                        if (location2.equals(etGoTo2.getText().toString().toLowerCase().trim())) {
                             nu++;
 
-                            robot.goTo(etGoTonext.getText().toString().toLowerCase().trim());
+                            robot.goTo(etGoTo2.getText().toString().toLowerCase().trim());
 
                             hideKeyboard();
                         }
                     }
+
                 }
 
 
