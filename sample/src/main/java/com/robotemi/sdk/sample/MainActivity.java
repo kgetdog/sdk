@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private TtsVisualizerView ttsVisualizerView;
 
-    public String a,b,c;
+    public String nam="home base";
 
     public int nu;
 
@@ -686,13 +686,14 @@ public class MainActivity extends AppCompatActivity implements
                  * 발화 부분 ^^^^^^^^^
                  */
 
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
 
                 if(nu<2) {
+                    try {
+                        Thread.sleep(4000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     for (String location2 : robot.getLocations()) {
                         if (location2.equals(etGoTo2.getText().toString().toLowerCase().trim())) {
                             nu++;
@@ -710,6 +711,14 @@ public class MainActivity extends AppCompatActivity implements
 
             case OnGoToLocationStatusChangedListener.ABORT:
                 robot.speak(TtsRequest.create("Cancelled", true));
+                if(nu==3){
+                    try {
+                        Thread.sleep(4000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    robot.speak(TtsRequest.create("Too much obstacle, So i can't move", true));
+                }
                 if(nu==1) {
 
                     try {
@@ -727,9 +736,29 @@ public class MainActivity extends AppCompatActivity implements
 
                                 hideKeyboard();
                             }
+                    }
+                }
+                if(nu==2) {
+
+                    try {
+                        Thread.sleep(4000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    for (String location3 : robot.getLocations()) {
+                        if (location3.equals(nam.toLowerCase().trim())) {
+                            nu++;
+
+                            robot.goTo(nam.toLowerCase().trim());
+
+                            hideKeyboard();
+                        }
 
                     }
                 }
+
                 break;
         }
     }
@@ -1260,25 +1289,6 @@ public class MainActivity extends AppCompatActivity implements
         robot.startDefaultNlu(etNlu.getText().toString());  // this is startNlu original code 나머지는 다 수정 한것
 
 
-        try{
-            Thread.sleep(5000);
-        }catch(InterruptedException e){
-            e.printStackTrace();
-        }
-
-
-        BatteryData batteryData = robot.getBatteryData();
-        if (batteryData == null) {
-            printLog("getBatteryData()", "batteryData is null");
-            return;
-        }
-        if (batteryData.isCharging()) {
-            TtsRequest ttsRequest = TtsRequest.create(batteryData.getBatteryPercentage() + " percent battery and charging.", true);
-            robot.speak(ttsRequest);
-        } else {
-            TtsRequest ttsRequest = TtsRequest.create(batteryData.getBatteryPercentage() + " percent battery and not charging.", true);
-            robot.speak(ttsRequest);
-        }
 
 
         //
