@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    private EditText etSpeak, etSpeak2,etSaveLocation, etGoTo,etGoTo2, etDistance, etX, etY, etYaw, etNlu;
+    private EditText etSpeak, etSpeak2,etSaveLocation, etGoTo,etGoTo2, etDistance, etX, etY, etYaw, etNlu,etNlu2;
 
     private List<String> locations;
 
@@ -642,22 +642,52 @@ public class MainActivity extends AppCompatActivity implements
                 robot.speak(TtsRequest.create("Completed", true));
 
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(4000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                /**
+                 * 발화 부분 vvvvvvvvvvv
+                 */
+
                 if(nu==1) {
                     TtsRequest ttsRequest = TtsRequest.create(etSpeak.getText().toString().trim(), true);
                     robot.speak(ttsRequest);
                     hideKeyboard();
+
+                    if(etNlu!=null){
+                        try {
+                            Thread.sleep(4000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        robot.startDefaultNlu(etNlu.getText().toString());  // this is startNlu original code 나머지는 다 수정 한것
+                    }
                 }
                 if(nu==2){
                     TtsRequest ttsRequest = TtsRequest.create(etSpeak2.getText().toString().trim(), true);
                     robot.speak(ttsRequest);
                     hideKeyboard();
+
+                    if(etNlu2!=null){
+                        try {
+                            Thread.sleep(4000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        robot.startDefaultNlu(etNlu2.getText().toString());  // this is startNlu original code 나머지는 다 수정 한것
+                    }
                 }
+
+
+
+
+                /**
+                 * 발화 부분 ^^^^^^^^^
+                 */
+
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(4000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -679,7 +709,27 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
             case OnGoToLocationStatusChangedListener.ABORT:
-                robot.speak(TtsRequest.create("Cancelled", false));
+                robot.speak(TtsRequest.create("Cancelled", true));
+                if(nu==1) {
+
+                    try {
+                        Thread.sleep(4000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+
+                        for (String location2 : robot.getLocations()) {
+                            if (location2.equals(etGoTo2.getText().toString().toLowerCase().trim())) {
+                                nu++;
+
+                                robot.goTo(etGoTo2.getText().toString().toLowerCase().trim());
+
+                                hideKeyboard();
+                            }
+
+                    }
+                }
                 break;
         }
     }
@@ -1229,11 +1279,7 @@ public class MainActivity extends AppCompatActivity implements
             TtsRequest ttsRequest = TtsRequest.create(batteryData.getBatteryPercentage() + " percent battery and not charging.", true);
             robot.speak(ttsRequest);
         }
-        try{
-            Thread.sleep(5000);
-        }catch(InterruptedException e){
-            e.printStackTrace();
-        }
+
 
         //
 
