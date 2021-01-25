@@ -160,6 +160,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public String nam="home base";
 
+    public String sentance;
+
     public int nu;
 
 
@@ -353,10 +355,10 @@ public class MainActivity extends AppCompatActivity implements
      * goTo checks that the location sent is saved then goes to that location.
      */
     public void goTo(View view) {
-        nu=0;
+       // nu=0;
         for (String location : robot.getLocations()) {
             if (location.equals(etGoTo.getText().toString().toLowerCase().trim())) {
-                nu++;
+                //nu++;
 
                 robot.goTo(etGoTo.getText().toString().toLowerCase().trim());
 
@@ -640,16 +642,29 @@ public class MainActivity extends AppCompatActivity implements
 
             case OnGoToLocationStatusChangedListener.COMPLETE:
                 robot.speak(TtsRequest.create("Completed", true));
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                TtsRequest ttsRequest = TtsRequest.create(sentance.trim(), true);
+                robot.speak(ttsRequest);
+                hideKeyboard();
 
+                sentance=null;
+
+                /*
                 try {
                     Thread.sleep(4000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                 */
                 /**
                  * 발화 부분 vvvvvvvvvvv
                  */
-
+/*
                 if(nu==1) {
                     TtsRequest ttsRequest = TtsRequest.create(etSpeak.getText().toString().trim(), true);
                     robot.speak(ttsRequest);
@@ -679,7 +694,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
 
-
+*/
 
 
                 /**
@@ -687,7 +702,7 @@ public class MainActivity extends AppCompatActivity implements
                  */
 
 
-
+/*
                 if(nu<2) {
                     try {
                         Thread.sleep(4000);
@@ -705,12 +720,13 @@ public class MainActivity extends AppCompatActivity implements
                     }
 
                 }
-
+*/
 
                 break;
 
             case OnGoToLocationStatusChangedListener.ABORT:
                 robot.speak(TtsRequest.create("Cancelled", true));
+                /*
                 if(nu==3){
                     try {
                         Thread.sleep(4000);
@@ -758,7 +774,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     }
                 }
-
+*/
                 break;
         }
     }
@@ -856,10 +872,33 @@ public class MainActivity extends AppCompatActivity implements
         } else if (asrResult.toLowerCase().contains("follow me")) {
             robot.finishConversation();
             robot.beWithMe();
-        } else if (asrResult.toLowerCase().contains("go to home base")) {
+        } else if (asrResult.toLowerCase().contains("home base")) {
+            sentance=asrResult;
             robot.finishConversation();
             robot.goTo("home base");
-        } else {
+
+        }
+        else if (asrResult.toLowerCase().contains("door")) {
+            sentance=asrResult;
+            robot.finishConversation();
+            robot.goTo("door");
+
+
+
+        }
+        else if (asrResult.toLowerCase().contains("street")) {
+            sentance=asrResult;
+            robot.finishConversation();
+            robot.goTo("street");
+
+        }
+        else if (asrResult.toLowerCase().contains("table")) {
+            sentance=asrResult;
+            robot.finishConversation();
+            robot.goTo("table");
+
+        }
+        else {
             robot.askQuestion("Sorry I can't understand you, could you please ask something else?");
         }
     }
