@@ -49,6 +49,8 @@
                 android:inputType="textPersonName"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorGrey" />
+            <!--
+
             <EditText
                 android:id="@+id/etGoTo2"
                 android:layout_width="match_parent"
@@ -62,6 +64,7 @@
                 android:inputType="textPersonName"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorGrey" />
+                -->
 
             <Button
                 android:id="@+id/btnGoTo"
@@ -85,6 +88,7 @@
                 android:inputType="textPersonName"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorGrey" />
+            <!--
 
             <EditText
                 android:id="@+id/etSpeak2"
@@ -99,12 +103,14 @@
                 android:inputType="textPersonName"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorGrey" />
-
+-->
             <Button
                 android:id="@+id/btnSpeak"
                 style="@style/ButtonCommon"
                 android:onClick="speak"
                 android:text="@string/speak" />
+
+            <!--
 
             <EditText
                 android:id="@+id/etDistance"
@@ -127,6 +133,8 @@
                 android:onClick="startDetectionModeWithDistance"
                 android:text="Start Detection Mode with Distance" />
 
+                -->
+
             <EditText
                 android:id="@+id/etNlu"
                 android:layout_width="match_parent"
@@ -138,6 +146,7 @@
                 android:hint="@string/enter_speech"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorGrey" />
+            <!--
 
             <EditText
                 android:id="@+id/etNlu2"
@@ -150,13 +159,14 @@
                 android:hint="@string/enter_speech"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorGrey" />
-
+-->
             <Button
                 android:id="@+id/btnNlu"
                 style="@style/ButtonCommon"
                 android:onClick="startNlu"
 
-                android:text="Start NLU" />
+                android:text="Start command" />
+            <!--
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -202,6 +212,7 @@
                 style="@style/ButtonCommon"
                 android:onClick="goToPosition"
                 android:text="Go To Position" />
+                -->
         </LinearLayout>
     </ScrollView>
 

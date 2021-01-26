@@ -160,9 +160,11 @@ public class MainActivity extends AppCompatActivity implements
 
     public String nam="home base";
 
-    public String sentance;
+    public String sentance=null;
+    public String err;
+    public String sig;
 
-    public int nu;
+    public int nu=0;
 
 
 
@@ -298,17 +300,17 @@ public class MainActivity extends AppCompatActivity implements
 
     public void initViews() {
         etSpeak = findViewById(R.id.etSpeak);
-        etSpeak2 = findViewById(R.id.etSpeak2);
+       // etSpeak2 = findViewById(R.id.etSpeak2);
 
         etSaveLocation = findViewById(R.id.etSaveLocation);
         etGoTo = findViewById(R.id.etGoTo);
-        etGoTo2= findViewById(R.id.etGoTo2);
-        etDistance = findViewById(R.id.etDistance);
+      //  etGoTo2= findViewById(R.id.etGoTo2);
+       // etDistance = findViewById(R.id.etDistance);
         tvLog = findViewById(R.id.tvLog);
         tvLog.setMovementMethod(new ScrollingMovementMethod());
-        etX = findViewById(R.id.etX);
-        etY = findViewById(R.id.etY);
-        etYaw = findViewById(R.id.etYaw);
+        //etX = findViewById(R.id.etX);
+       // etY = findViewById(R.id.etY);
+      //  etYaw = findViewById(R.id.etYaw);
         etNlu = findViewById(R.id.etNlu);
         ivFace = findViewById(R.id.imageViewFace);
         ttsVisualizerView = findViewById(R.id.visualizerView);
@@ -641,17 +643,31 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
             case OnGoToLocationStatusChangedListener.COMPLETE:
-                robot.speak(TtsRequest.create("Completed", true));
+                robot.speak(TtsRequest.create("Completed", false));
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(4000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                TtsRequest ttsRequest = TtsRequest.create(sentance.trim(), true);
-                robot.speak(ttsRequest);
-                hideKeyboard();
 
-                sentance=null;
+
+
+
+
+                if(sig!=null) {
+
+                    TtsRequest ttsRequest = TtsRequest.create(sentance, true);
+                    robot.speak(ttsRequest);
+                    hideKeyboard();
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    sig=null;
+                }
+
+              //  sentance=null;
 
                 /*
                 try {
@@ -661,7 +677,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                  */
-                /**
+                 /**
                  * 발화 부분 vvvvvvvvvvv
                  */
 /*
@@ -725,7 +741,11 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
             case OnGoToLocationStatusChangedListener.ABORT:
-                robot.speak(TtsRequest.create("Cancelled", true));
+                robot.speak(TtsRequest.create("Cancelled", false));
+
+
+
+
                 /*
                 if(nu==3){
                     try {
@@ -858,6 +878,12 @@ public class MainActivity extends AppCompatActivity implements
             e.printStackTrace();
             return;
         }
+        if(sig=="1"){
+            sentance=asrResult;
+            robot.finishConversation();
+            robot.goTo("door");
+
+        }
 
         if (asrResult.equalsIgnoreCase("Hello")) {
             robot.askQuestion("Hello, I'm temi, what can I do for you?");
@@ -872,30 +898,54 @@ public class MainActivity extends AppCompatActivity implements
         } else if (asrResult.toLowerCase().contains("follow me")) {
             robot.finishConversation();
             robot.beWithMe();
-        } else if (asrResult.toLowerCase().contains("home base")) {
+
+        } /*
+        else if (asrResult.toLowerCase().contains("home base")) {
             sentance=asrResult;
             robot.finishConversation();
             robot.goTo("home base");
-
         }
         else if (asrResult.toLowerCase().contains("door")) {
             sentance=asrResult;
             robot.finishConversation();
             robot.goTo("door");
-
-
-
         }
         else if (asrResult.toLowerCase().contains("street")) {
+
             sentance=asrResult;
+
             robot.finishConversation();
             robot.goTo("street");
-
         }
         else if (asrResult.toLowerCase().contains("table")) {
             sentance=asrResult;
             robot.finishConversation();
             robot.goTo("table");
+        }
+        else if (asrResult.toLowerCase().contains("tv")) {
+            sentance=asrResult;
+            robot.finishConversation();
+            robot.goTo("tv");
+        }
+        else if (asrResult.toLowerCase().contains("corner")) {
+            sentance=asrResult;
+            robot.finishConversation();
+            robot.goTo("corner");
+        }
+        else if (asrResult.toLowerCase().contains("water")) {
+            sentance=asrResult;
+            robot.finishConversation();
+            robot.goTo("water");
+        }
+        else if (asrResult.toLowerCase().contains("hallway")) {
+            sentance=asrResult;
+            robot.finishConversation();
+            robot.goTo("hallway");
+        }
+        */
+        else if (asrResult.toLowerCase().contains("1")) {
+            sig="1";
+            robot.finishConversation();
 
         }
         else {

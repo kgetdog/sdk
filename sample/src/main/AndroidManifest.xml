@@ -41,7 +41,7 @@
         <!-- Set value to true to cover original voice flow[NLU]. -->
         <meta-data
             android:name="@string/metadata_override_nlu"
-            android:value="false" />
+            android:value="true" />
 
         <!-- Set value to true to cover original voice flow[ASR]. -->
         <meta-data
@@ -59,6 +59,11 @@
                            com.robotemi.permission.map,
                            com.robotemi.permission.settings,
                            com.robotemi.permission.sequence" />
+
+
+
+
+
 
         <activity
             android:name=".MainActivity"
