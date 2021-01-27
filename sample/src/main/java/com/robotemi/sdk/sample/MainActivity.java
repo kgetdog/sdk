@@ -161,8 +161,13 @@ public class MainActivity extends AppCompatActivity implements
     public String nam="home base";
 
     public String sentance=null;
-    public String err;
-    public String sig;
+    //public String err;
+
+    public String sig=null;
+    public String user1="홍길동";
+    //public String user2=;
+    //public String user3;
+
 
     public int nu=0;
 
@@ -878,15 +883,19 @@ public class MainActivity extends AppCompatActivity implements
             e.printStackTrace();
             return;
         }
-        if(sig=="1"){
+        /*
+        if(sig!=null){
             sentance=asrResult;
             robot.finishConversation();
-            robot.goTo("door");
+            robot.goTo(user1);
 
         }
+        */
+
 
         if (asrResult.equalsIgnoreCase("Hello")) {
-            robot.askQuestion("Hello, I'm temi, what can I do for you?");
+            robot.askQuestion("안녕하세요");
+            //Hello, I'm temi, what can I do for you?
         } else if (asrResult.equalsIgnoreCase("Play music")) {
             robot.speak(TtsRequest.create("Okay, please enjoy.", false));
             robot.finishConversation();
@@ -896,6 +905,7 @@ public class MainActivity extends AppCompatActivity implements
             robot.finishConversation();
             playMovie();
         } else if (asrResult.toLowerCase().contains("follow me")) {
+
             robot.finishConversation();
             robot.beWithMe();
 
@@ -943,9 +953,11 @@ public class MainActivity extends AppCompatActivity implements
             robot.goTo("hallway");
         }
         */
-        else if (asrResult.toLowerCase().contains("1")) {
-            sig="1";
+        else if (asrResult.toLowerCase().contains(user1)) {
+            sig=user1;
+            sentance=asrResult;
             robot.finishConversation();
+            robot.goTo(user1);
 
         }
         else {
