@@ -162,11 +162,15 @@ public class MainActivity extends AppCompatActivity implements
 
     public String sentance=null;
     //public String err;
+    public String recog;
+    public String call;
 
     public String sig=null;
-    public String user1="홍길동";
-    //public String user2=;
-    //public String user3;
+    public String sender=null;
+    public String user1="입구";
+    public String user2="복도";
+    public String user3="책상";
+    public String user4="8226";
 
 
     public int nu=0;
@@ -304,10 +308,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void initViews() {
-        etSpeak = findViewById(R.id.etSpeak);
+       // etSpeak = findViewById(R.id.etSpeak);
        // etSpeak2 = findViewById(R.id.etSpeak2);
 
-        etSaveLocation = findViewById(R.id.etSaveLocation);
+       // etSaveLocation = findViewById(R.id.etSaveLocation);
         etGoTo = findViewById(R.id.etGoTo);
       //  etGoTo2= findViewById(R.id.etGoTo2);
        // etDistance = findViewById(R.id.etDistance);
@@ -316,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements
         //etX = findViewById(R.id.etX);
        // etY = findViewById(R.id.etY);
       //  etYaw = findViewById(R.id.etYaw);
-        etNlu = findViewById(R.id.etNlu);
+        //etNlu = findViewById(R.id.etNlu);
         ivFace = findViewById(R.id.imageViewFace);
         ttsVisualizerView = findViewById(R.id.visualizerView);
     }
@@ -363,6 +367,7 @@ public class MainActivity extends AppCompatActivity implements
      */
     public void goTo(View view) {
        // nu=0;
+        /*
         for (String location : robot.getLocations()) {
             if (location.equals(etGoTo.getText().toString().toLowerCase().trim())) {
                 //nu++;
@@ -372,6 +377,8 @@ public class MainActivity extends AppCompatActivity implements
                 hideKeyboard();
             }
         }
+        */
+         sender=etGoTo.getText().toString();
 
 
 
@@ -649,6 +656,8 @@ public class MainActivity extends AppCompatActivity implements
 
             case OnGoToLocationStatusChangedListener.COMPLETE:
                 robot.speak(TtsRequest.create("Completed", false));
+
+
                 try {
                     Thread.sleep(4000);
                 } catch (InterruptedException e) {
@@ -659,18 +668,24 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-                if(sig!=null) {
 
-                    TtsRequest ttsRequest = TtsRequest.create(sentance, true);
-                    robot.speak(ttsRequest);
-                    hideKeyboard();
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+
+                    if (sig != null) {
+
+
+
+                            TtsRequest ttsRequest2 = TtsRequest.create(sentance, true);
+                            robot.speak(ttsRequest2);
+                            sig = null;
+                            hideKeyboard();
+
+
+
+
+
                     }
-                    sig=null;
-                }
+
+
 
               //  sentance=null;
 
@@ -891,25 +906,26 @@ public class MainActivity extends AppCompatActivity implements
 
         }
         */
+        if(recog!=null) {
 
 
-        if (asrResult.equalsIgnoreCase("Hello")) {
-            robot.askQuestion("안녕하세요");
-            //Hello, I'm temi, what can I do for you?
-        } else if (asrResult.equalsIgnoreCase("Play music")) {
-            robot.speak(TtsRequest.create("Okay, please enjoy.", false));
-            robot.finishConversation();
-            playMusic();
-        } else if (asrResult.equalsIgnoreCase("Play movie")) {
-            robot.speak(TtsRequest.create("Okay, please enjoy.", false));
-            robot.finishConversation();
-            playMovie();
-        } else if (asrResult.toLowerCase().contains("follow me")) {
+            if (asrResult.equalsIgnoreCase("Hello")) {
+                robot.askQuestion("안녕하세요");
+                //Hello, I'm temi, what can I do for you?
+            } else if (asrResult.equalsIgnoreCase("Play music")) {
+                robot.speak(TtsRequest.create("Okay, please enjoy.", false));
+                robot.finishConversation();
+                playMusic();
+            } else if (asrResult.equalsIgnoreCase("Play movie")) {
+                robot.speak(TtsRequest.create("Okay, please enjoy.", false));
+                robot.finishConversation();
+                playMovie();
+            } else if (asrResult.toLowerCase().contains("follow me")) {
 
-            robot.finishConversation();
-            robot.beWithMe();
+                robot.finishConversation();
+                robot.beWithMe();
 
-        } /*
+            } /*
         else if (asrResult.toLowerCase().contains("home base")) {
             sentance=asrResult;
             robot.finishConversation();
@@ -952,16 +968,46 @@ public class MainActivity extends AppCompatActivity implements
             robot.finishConversation();
             robot.goTo("hallway");
         }
-        */
-        else if (asrResult.toLowerCase().contains(user1)) {
-            sig=user1;
-            sentance=asrResult;
-            robot.finishConversation();
-            robot.goTo(user1);
+        */ else if (asrResult.toLowerCase().trim().contains(user1)) {
+                sig = user1;
+                sentance = recog+"님이 발신 했습니다.     "+asrResult;
+                call=sig+"님 호출 입니다. 얼굴을 테미 화면 가까이 접근해 주세요. ";
+                recog=null;
+                robot.finishConversation();
 
-        }
-        else {
-            robot.askQuestion("Sorry I can't understand you, could you please ask something else?");
+                robot.goTo(sig);
+
+
+            } else if (asrResult.toLowerCase().trim().contains(user2)) {
+                sig = user2;
+                sentance = recog+"님이 발신 했습니다.     "+ asrResult;
+                call=sig+"님 호출 입니다. 얼굴을 테미 화면 가까이 접근해 주세요. ";
+                recog=null;
+                robot.finishConversation();
+
+                robot.goTo(sig);
+
+            } else if (asrResult.toLowerCase().trim().contains(user3)) {
+                sig = user3;
+                sentance =  recog+"님이 발신 했습니다.     "+asrResult;
+                call=sig+"님 호출 입니다. 얼굴을 테미 화면 가까이 접근해 주세요. ";
+                recog=null;
+                robot.finishConversation();
+
+                robot.goTo(sig);
+
+            } else if (asrResult.toLowerCase().trim().contains(user4)) {
+                sig = user4;
+                sentance = recog+"님이 발신 했습니다.     "+ asrResult;
+                call=sig+"님 호출 입니다. 얼굴을 테미 화면 가까이 접근해 주세요. ";
+                recog=null;
+                robot.finishConversation();
+
+                robot.goTo(sig);
+
+            } else {
+                robot.askQuestion("Sorry I can't understand you, could you please ask something else?");
+            }
         }
     }
 
@@ -1347,6 +1393,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onFaceRecognized(@NotNull List<ContactModel> contactModelList) {
         for (ContactModel contactModel : contactModelList) {
             printLog("onFaceRecognized", contactModel.toString());
+            recog=contactModel.getFirstName();
             showFaceRecognitionImage(contactModel.getImageKey());
         }
     }

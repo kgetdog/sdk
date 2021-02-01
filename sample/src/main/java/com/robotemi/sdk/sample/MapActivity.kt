@@ -35,7 +35,7 @@ class MapActivity : AppCompatActivity() {
             val mapImage = mapDataModel.mapImage
             Log.i("Map", mapImage.toString())
             bitmap = Bitmap.createBitmap(
-                mapImage.data.map { Color.argb((it * 2.55).roundToInt(), 0, 0, 0) }
+                mapImage.data.map { Color.argb((it * 2.55).roundToInt(), 100, 100, 100) }
                     .toIntArray(),
                 mapImage.cols,
                 mapImage.rows,
