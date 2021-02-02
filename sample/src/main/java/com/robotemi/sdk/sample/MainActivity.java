@@ -164,11 +164,14 @@ public class MainActivity extends AppCompatActivity implements
     //public String err;
     public String recog;
     public String call;
+    public int receive=0;
+    public String retu=null;
+    public String home="home base";
 
     public String sig=null;
     public String sender=null;
-    public String user1="입구";
-    public String user2="복도";
+    public String user1="문";
+    public String user2="사과";
     public String user3="책상";
     public String user4="8226";
 
@@ -378,10 +381,36 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
         */
-         sender=etGoTo.getText().toString();
+        // sender=etGoTo.getText().toString();
+        if(receive==1){
+            TtsRequest ttsRequest2 = TtsRequest.create(sentance, true);
+            robot.speak(ttsRequest2);
+            sig = null;
+
+            call=null;
+
+            hideKeyboard();
+
+        }
 
 
 
+
+
+    }
+    public void goTo2(View view) {
+        retu="홈베이스 로 복귀 하겠습니다.";
+        TtsRequest ttsRequest3 = TtsRequest.create(retu, true);
+        robot.speak(ttsRequest3);
+        hideKeyboard();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        robot.goTo(home.trim());
+        hideKeyboard();
     }
 
     /**
@@ -604,6 +633,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onTtsStatusChanged(@NotNull TtsRequest ttsRequest) {
         // Do whatever you like upon the status changing. after the robot finishes speaking
+
+
     }
 
     @Override
@@ -644,10 +675,12 @@ public class MainActivity extends AppCompatActivity implements
         switch (status) {
             case OnGoToLocationStatusChangedListener.START:
                 robot.speak(TtsRequest.create("Starting", false));
+                receive=0;
                 break;
 
             case OnGoToLocationStatusChangedListener.CALCULATING:
                 robot.speak(TtsRequest.create("Calculating", false));
+
                 break;
 
             case OnGoToLocationStatusChangedListener.GOING:
@@ -658,32 +691,18 @@ public class MainActivity extends AppCompatActivity implements
                 robot.speak(TtsRequest.create("Completed", false));
 
 
-                try {
-                    Thread.sleep(4000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(sig!=null) {
+                    receive = 1;
+
+
+                    TtsRequest ttsRequest1 = TtsRequest.create(call, true);
+                    robot.speak(ttsRequest1);
+                    hideKeyboard();
                 }
 
 
 
 
-
-
-
-                    if (sig != null) {
-
-
-
-                            TtsRequest ttsRequest2 = TtsRequest.create(sentance, true);
-                            robot.speak(ttsRequest2);
-                            sig = null;
-                            hideKeyboard();
-
-
-
-
-
-                    }
 
 
 
@@ -731,7 +750,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
 */
-
 
                 /**
                  * 발화 부분 ^^^^^^^^^
@@ -971,7 +989,7 @@ public class MainActivity extends AppCompatActivity implements
         */ else if (asrResult.toLowerCase().trim().contains(user1)) {
                 sig = user1;
                 sentance = recog+"님이 발신 했습니다.     "+asrResult;
-                call=sig+"님 호출 입니다. 얼굴을 테미 화면 가까이 접근해 주세요. ";
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요 ";
                 recog=null;
                 robot.finishConversation();
 
@@ -981,7 +999,7 @@ public class MainActivity extends AppCompatActivity implements
             } else if (asrResult.toLowerCase().trim().contains(user2)) {
                 sig = user2;
                 sentance = recog+"님이 발신 했습니다.     "+ asrResult;
-                call=sig+"님 호출 입니다. 얼굴을 테미 화면 가까이 접근해 주세요. ";
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요 ";
                 recog=null;
                 robot.finishConversation();
 
@@ -990,7 +1008,7 @@ public class MainActivity extends AppCompatActivity implements
             } else if (asrResult.toLowerCase().trim().contains(user3)) {
                 sig = user3;
                 sentance =  recog+"님이 발신 했습니다.     "+asrResult;
-                call=sig+"님 호출 입니다. 얼굴을 테미 화면 가까이 접근해 주세요. ";
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요 ";
                 recog=null;
                 robot.finishConversation();
 
@@ -999,7 +1017,7 @@ public class MainActivity extends AppCompatActivity implements
             } else if (asrResult.toLowerCase().trim().contains(user4)) {
                 sig = user4;
                 sentance = recog+"님이 발신 했습니다.     "+ asrResult;
-                call=sig+"님 호출 입니다. 얼굴을 테미 화면 가까이 접근해 주세요. ";
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요 ";
                 recog=null;
                 robot.finishConversation();
 

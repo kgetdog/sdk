@@ -71,7 +71,13 @@
                 android:id="@+id/btnGoTo"
                 style="@style/ButtonCommon"
                 android:onClick="goTo"
-                android:text="입   력" />
+                android:text="수    신" />
+
+            <Button
+                android:id="@+id/btnGoTo2"
+                style="@style/ButtonCommon"
+                android:onClick="goTo2"
+                android:text="복     귀" />
 
 
 
