@@ -164,9 +164,11 @@ public class MainActivity extends AppCompatActivity implements
     //public String err;
     public String recog;
     public String call;
+    public String message;
     public int receive=0;
     public String retu=null;
     public String home="home base";
+    public int tier=0;
 
     public String sig=null;
     public String sender=null;
@@ -174,6 +176,10 @@ public class MainActivity extends AppCompatActivity implements
     public String user2="사과";
     public String user3="책상";
     public String user4="8226";
+    public String user5="복도";
+    public String user6="교차로";
+    //public String user7="책상";
+    //public String user8="8226";
 
 
     public int nu=0;
@@ -315,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements
        // etSpeak2 = findViewById(R.id.etSpeak2);
 
        // etSaveLocation = findViewById(R.id.etSaveLocation);
-        etGoTo = findViewById(R.id.etGoTo);
+      //  etGoTo = findViewById(R.id.etGoTo);
       //  etGoTo2= findViewById(R.id.etGoTo2);
        // etDistance = findViewById(R.id.etDistance);
         tvLog = findViewById(R.id.tvLog);
@@ -383,14 +389,11 @@ public class MainActivity extends AppCompatActivity implements
         */
         // sender=etGoTo.getText().toString();
         if(receive==1){
-            TtsRequest ttsRequest2 = TtsRequest.create(sentance, true);
+            TtsRequest ttsRequest2 = TtsRequest.create(sentance+message, true);
             robot.speak(ttsRequest2);
             sig = null;
-
             call=null;
-
             hideKeyboard();
-
         }
 
 
@@ -402,6 +405,13 @@ public class MainActivity extends AppCompatActivity implements
         retu="홈베이스 로 복귀 하겠습니다.";
         TtsRequest ttsRequest3 = TtsRequest.create(retu, true);
         robot.speak(ttsRequest3);
+        tier=0;
+        receive=0;
+        sentance=null;
+        message=null;
+        call=null;
+        sig=null;
+        recog=null;
         hideKeyboard();
 
         try {
@@ -411,6 +421,41 @@ public class MainActivity extends AppCompatActivity implements
         }
         robot.goTo(home.trim());
         hideKeyboard();
+    }
+
+    public void goTo3(View view) {
+        // nu=0;
+        /*
+        for (String location : robot.getLocations()) {
+            if (location.equals(etGoTo.getText().toString().toLowerCase().trim())) {
+                //nu++;
+
+                robot.goTo(etGoTo.getText().toString().toLowerCase().trim());
+
+                hideKeyboard();
+            }
+        }
+        */
+        // sender=etGoTo.getText().toString();
+        tier=0;
+        receive=0;
+        sentance=null;
+        message=null;
+        call=null;
+        sig=null;
+        recog=null;
+
+
+            TtsRequest ttsRequest4 = TtsRequest.create("대화가 초기화 되었습니다. 처음부터 재입력 해주세요", true);
+            robot.speak(ttsRequest4);
+
+            hideKeyboard();
+
+
+
+
+
+
     }
 
     /**
@@ -635,6 +680,7 @@ public class MainActivity extends AppCompatActivity implements
         // Do whatever you like upon the status changing. after the robot finishes speaking
 
 
+
     }
 
     @Override
@@ -689,14 +735,20 @@ public class MainActivity extends AppCompatActivity implements
 
             case OnGoToLocationStatusChangedListener.COMPLETE:
                 robot.speak(TtsRequest.create("Completed", false));
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
 
 
                 if(sig!=null) {
                     receive = 1;
-
-
                     TtsRequest ttsRequest1 = TtsRequest.create(call, true);
                     robot.speak(ttsRequest1);
+                    sig=null;
+                    call=null;
                     hideKeyboard();
                 }
 
@@ -925,12 +977,25 @@ public class MainActivity extends AppCompatActivity implements
         }
         */
         if(recog!=null) {
+            if(tier==2){
+                tier=0;
+                message=asrResult;
+                robot.finishConversation();
+                robot.goTo(sig);
+
+            }
 
 
-            if (asrResult.equalsIgnoreCase("Hello")) {
-                robot.askQuestion("안녕하세요");
-                //Hello, I'm temi, what can I do for you?
-            } else if (asrResult.equalsIgnoreCase("Play music")) {
+            else if (asrResult.equalsIgnoreCase("발신")&&tier==0) {
+                robot.askQuestion("수신자 이름을 말씀해 주세요");
+
+                tier=1;
+                receive=0;
+                sentance = recog+"님이 발신 했습니다.";
+
+            }
+/*
+            else if (asrResult.equalsIgnoreCase("Play music")) {
                 robot.speak(TtsRequest.create("Okay, please enjoy.", false));
                 robot.finishConversation();
                 playMusic();
@@ -943,7 +1008,7 @@ public class MainActivity extends AppCompatActivity implements
                 robot.finishConversation();
                 robot.beWithMe();
 
-            } /*
+            }
         else if (asrResult.toLowerCase().contains("home base")) {
             sentance=asrResult;
             robot.finishConversation();
@@ -986,44 +1051,44 @@ public class MainActivity extends AppCompatActivity implements
             robot.finishConversation();
             robot.goTo("hallway");
         }
-        */ else if (asrResult.toLowerCase().trim().contains(user1)) {
+        */ else if (asrResult.equalsIgnoreCase(user1)&&tier==1) {
+                tier=2;
                 sig = user1;
-                sentance = recog+"님이 발신 했습니다.     "+asrResult;
-                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요 ";
-                recog=null;
-                robot.finishConversation();
-
-                robot.goTo(sig);
-
-
-            } else if (asrResult.toLowerCase().trim().contains(user2)) {
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
+                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+            }
+            else if (asrResult.equalsIgnoreCase(user2)&&tier==1) {
+                tier=2;
                 sig = user2;
-                sentance = recog+"님이 발신 했습니다.     "+ asrResult;
-                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요 ";
-                recog=null;
-                robot.finishConversation();
-
-                robot.goTo(sig);
-
-            } else if (asrResult.toLowerCase().trim().contains(user3)) {
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
+                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+            }
+            else if (asrResult.equalsIgnoreCase(user3)&&tier==1) {
+                tier=2;
                 sig = user3;
-                sentance =  recog+"님이 발신 했습니다.     "+asrResult;
-                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요 ";
-                recog=null;
-                robot.finishConversation();
-
-                robot.goTo(sig);
-
-            } else if (asrResult.toLowerCase().trim().contains(user4)) {
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
+                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+            }
+            else if (asrResult.equalsIgnoreCase(user4)&&tier==1) {
+                tier=2;
                 sig = user4;
-                sentance = recog+"님이 발신 했습니다.     "+ asrResult;
-                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요 ";
-                recog=null;
-                robot.finishConversation();
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
+                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+            }
+            else if (asrResult.equalsIgnoreCase(user5)&&tier==1) {
+                tier=2;
+                sig = user5;
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
+                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+            }
+            else if (asrResult.equalsIgnoreCase(user6)&&tier==1) {
+                tier=2;
+                sig = user6;
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
+                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+            }
 
-                robot.goTo(sig);
-
-            } else {
+            else {
                 robot.askQuestion("Sorry I can't understand you, could you please ask something else?");
             }
         }

@@ -37,6 +37,7 @@
                 android:onClick="saveLocation"
                 android:text="@string/save_location" />
 -->
+            <!--
             <EditText
                 android:id="@+id/etGoTo"
                 android:layout_width="match_parent"
@@ -50,7 +51,8 @@
                 android:inputType="textPersonName"
                 android:textColor="@color/colorBlack"
                 android:textColorHint="@color/colorGrey" />
-            <!--
+
+            --><!--
 
             <EditText
                 android:id="@+id/etGoTo2"
@@ -78,6 +80,12 @@
                 style="@style/ButtonCommon"
                 android:onClick="goTo2"
                 android:text="복     귀" />
+
+            <Button
+                android:id="@+id/btnGoTo3"
+                style="@style/ButtonCommon"
+                android:onClick="goTo"
+                android:text="대화 처음부터 하기" />
 
 
 
