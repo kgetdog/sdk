@@ -172,13 +172,13 @@ public class MainActivity extends AppCompatActivity implements
 
     public String sig=null;
     public String sender=null;
-    public String user1="문";
-    public String user2="사과";
+    public String user1="연구실";
+    public String user2="길";
     public String user3="책상";
     public String user4="8226";
     public String user5="복도";
     public String user6="교차로";
-    //public String user7="책상";
+    public String user7="중앙";
     //public String user8="8226";
 
 
@@ -334,16 +334,10 @@ public class MainActivity extends AppCompatActivity implements
         ttsVisualizerView = findViewById(R.id.visualizerView);
     }
 
-
-
     /**
      * Have the robot speak while displaying what is being said.
      */
     public void speak(View view) {
-
-
-
-
         /////
         ///
         //
@@ -353,8 +347,6 @@ public class MainActivity extends AppCompatActivity implements
         //
         ///
         ////
-
-
     }
 
     /**
@@ -395,11 +387,6 @@ public class MainActivity extends AppCompatActivity implements
             call=null;
             hideKeyboard();
         }
-
-
-
-
-
     }
     public void goTo2(View view) {
         retu="홈베이스 로 복귀 하겠습니다.";
@@ -444,18 +431,10 @@ public class MainActivity extends AppCompatActivity implements
         call=null;
         sig=null;
         recog=null;
-
-
             TtsRequest ttsRequest4 = TtsRequest.create("대화가 초기화 되었습니다. 처음부터 재입력 해주세요", true);
             robot.speak(ttsRequest4);
 
             hideKeyboard();
-
-
-
-
-
-
     }
 
     /**
@@ -720,28 +699,26 @@ public class MainActivity extends AppCompatActivity implements
         robot.speak(TtsRequest.create(description, false));
         switch (status) {
             case OnGoToLocationStatusChangedListener.START:
-                robot.speak(TtsRequest.create("Starting", false));
+                //robot.speak(TtsRequest.create("Starting", false));
                 receive=0;
                 break;
 
             case OnGoToLocationStatusChangedListener.CALCULATING:
-                robot.speak(TtsRequest.create("Calculating", false));
+               // robot.speak(TtsRequest.create("Calculating", false));
 
                 break;
 
             case OnGoToLocationStatusChangedListener.GOING:
-                robot.speak(TtsRequest.create("Going", false));
+               // robot.speak(TtsRequest.create("Going", false));
                 break;
 
             case OnGoToLocationStatusChangedListener.COMPLETE:
-                robot.speak(TtsRequest.create("Completed", false));
+               // robot.speak(TtsRequest.create("Completed", false));
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-
 
                 if(sig!=null) {
                     receive = 1;
@@ -751,12 +728,6 @@ public class MainActivity extends AppCompatActivity implements
                     call=null;
                     hideKeyboard();
                 }
-
-
-
-
-
-
 
               //  sentance=null;
 
@@ -802,12 +773,9 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
 */
-
                 /**
                  * 발화 부분 ^^^^^^^^^
                  */
-
-
 /*
                 if(nu<2) {
                     try {
@@ -824,18 +792,11 @@ public class MainActivity extends AppCompatActivity implements
                             hideKeyboard();
                         }
                     }
-
                 }
 */
-
                 break;
-
             case OnGoToLocationStatusChangedListener.ABORT:
-                robot.speak(TtsRequest.create("Cancelled", false));
-
-
-
-
+               // robot.speak(TtsRequest.create("Cancelled", false));
                 /*
                 if(nu==3){
                     try {
@@ -1055,41 +1016,47 @@ public class MainActivity extends AppCompatActivity implements
                 tier=2;
                 sig = user1;
                 call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
-                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+                robot.askQuestion("전달할 메시지를 말씀해 주세요");
             }
             else if (asrResult.equalsIgnoreCase(user2)&&tier==1) {
                 tier=2;
                 sig = user2;
                 call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
-                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+                robot.askQuestion("전달할 메시지를 말씀해 주세요");
             }
             else if (asrResult.equalsIgnoreCase(user3)&&tier==1) {
                 tier=2;
                 sig = user3;
                 call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
-                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+                robot.askQuestion("전달할 메시지를 말씀해 주세요");
             }
             else if (asrResult.equalsIgnoreCase(user4)&&tier==1) {
                 tier=2;
                 sig = user4;
                 call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
-                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+                robot.askQuestion("전달할 메시지를 말씀해 주세요");
             }
             else if (asrResult.equalsIgnoreCase(user5)&&tier==1) {
                 tier=2;
                 sig = user5;
                 call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
-                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+                robot.askQuestion("전달할 메시지를 말씀해 주세요");
             }
             else if (asrResult.equalsIgnoreCase(user6)&&tier==1) {
                 tier=2;
                 sig = user6;
                 call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
-                robot.askQuestion("추가로 전달할 메시지를 말씀해 주세요");
+                robot.askQuestion("전달할 메시지를 말씀해 주세요");
+            }
+            else if (asrResult.equalsIgnoreCase(user7)&&tier==1) {
+                tier=2;
+                sig = user7;
+                call=sig+"님 호출 입니다. 수신 버튼을 눌러 주세요";
+                robot.askQuestion("전달할 메시지를 말씀해 주세요");
             }
 
             else {
-                robot.askQuestion("Sorry I can't understand you, could you please ask something else?");
+                robot.askQuestion("잘 못 들었습니다. 다시 말씀 해주세요.");
             }
         }
     }

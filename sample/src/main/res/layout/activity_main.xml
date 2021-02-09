@@ -84,7 +84,7 @@
             <Button
                 android:id="@+id/btnGoTo3"
                 style="@style/ButtonCommon"
-                android:onClick="goTo"
+                android:onClick="goTo3"
                 android:text="대화 처음부터 하기" />
 
 
@@ -324,93 +324,92 @@
                                         android:text="Start Telepresence to temi Center" />
                                         -->
             <!--
-                                   <Button
-                                       android:id="@+id/btnFetchMap"
-                                       style="@style/ButtonCommon"
-                                       android:onClick="getMap"
-                                       android:layout_height="100dp"
-                                       android:text="Get Map Data" />
+                                               <Button
+                                                   android:id="@+id/btnFetchMap"
+                                                   style="@style/ButtonCommon"
+                                                   android:onClick="getMap"
+                                                   android:layout_height="100dp"
+                                                   android:text="Get Map Data" />
+
+                                                        <Button
+                                                   android:id="@+id/btnFetchSequence"
+                                                   style="@style/ButtonCommon"
+                                                   android:layout_height="100dp"
+                                                   android:onClick="getAllSequences"
+                                                   android:text="Get All Sequences" />
+
+                                               <Button
+                                                   android:id="@+id/btnPlayFirstSequenceWithoutPlayer"
+                                                   style="@style/ButtonCommon"
+                                                   android:layout_height="100dp"
+                                                   android:onClick="playFirstSequenceWithoutPlayer"
+                                                   android:text="Play First Sequence without Player" />
+
+                                               <Button
+                                                   android:id="@+id/btnPlayFirstSequence"
+                                                   style="@style/ButtonCommon"
+                                                   android:layout_height="100dp"
+                                                   android:onClick="playFirstSequence"
+                                                   android:text="Play First Sequence" />
+
+                                               <Button
+                                                   android:id="@+id/btnGetOSVersion"
+                                                   style="@style/ButtonCommon"
+                                                   android:layout_height="100dp"
+                                                   android:onClick="getOSVersion"
+                                                   android:text="Get OS Version" />
 
 
-                                   <Button
-                                       android:id="@+id/btnFetchSequence"
-                                       style="@style/ButtonCommon"
-                                       android:layout_height="100dp"
-                                       android:onClick="getAllSequences"
-                                       android:text="Get All Sequences" />
+                                               <Button
+                                                   android:id="@+id/btnCheckFace"
+                                                   style="@style/ButtonCommon"
+                                                   android:layout_height="100dp"
+                                                   android:onClick="requestFace"
+                                                   android:text="Request Permission: Face Recognition" />
 
-                                   <Button
-                                       android:id="@+id/btnPlayFirstSequenceWithoutPlayer"
-                                       style="@style/ButtonCommon"
-                                       android:layout_height="100dp"
-                                       android:onClick="playFirstSequenceWithoutPlayer"
-                                       android:text="Play First Sequence without Player" />
+                                               <Button
+                                                   android:id="@+id/btnCheckMap"
+                                                   style="@style/ButtonCommon"
+                                                   android:layout_height="100dp"
+                                                   android:onClick="requestMap"
+                                                   android:text="Request Permission: Map" />
 
-                                   <Button
-                                       android:id="@+id/btnPlayFirstSequence"
-                                       style="@style/ButtonCommon"
-                                       android:layout_height="100dp"
-                                       android:onClick="playFirstSequence"
-                                       android:text="Play First Sequence" />
+                                               <Button
+                                                   android:id="@+id/btnCheckSettings"
+                                                   style="@style/ButtonCommon"
+                                                   android:layout_height="100dp"
+                                                   android:onClick="requestSettings"
+                                                   android:text="Request Permission: Settings" />
 
-                                   <Button
-                                       android:id="@+id/btnGetOSVersion"
-                                       style="@style/ButtonCommon"
-                                       android:layout_height="100dp"
-                                       android:onClick="getOSVersion"
-                                       android:text="Get OS Version" />
-
-
-                                   <Button
-                                       android:id="@+id/btnCheckFace"
-                                       style="@style/ButtonCommon"
-                                       android:layout_height="100dp"
-                                       android:onClick="requestFace"
-                                       android:text="Request Permission: Face Recognition" />
-
-                                   <Button
-                                       android:id="@+id/btnCheckMap"
-                                       style="@style/ButtonCommon"
-                                       android:layout_height="100dp"
-                                       android:onClick="requestMap"
-                                       android:text="Request Permission: Map" />
-
-                                   <Button
-                                       android:id="@+id/btnCheckSettings"
-                                       style="@style/ButtonCommon"
-                                       android:layout_height="100dp"
-                                       android:onClick="requestSettings"
-                                       android:text="Request Permission: Settings" />
-
-                                   <Button
-                                       android:id="@+id/btnCheckSequence"
-                                       style="@style/ButtonCommon"
-                                       android:layout_height="100dp"
-                                       android:onClick="requestSequence"
-                                       android:text="Request Permission: Sequence" />
+                                               <Button
+                                                   android:id="@+id/btnCheckSequence"
+                                                   style="@style/ButtonCommon"
+                                                   android:layout_height="100dp"
+                                                   android:onClick="requestSequence"
+                                                   android:text="Request Permission: Sequence" />
 
 
-                        <Button
-                            android:id="@+id/btnCheckAllPermission"
-                            style="@style/ButtonCommon"
-                            android:layout_height="100dp"
-                            android:onClick="requestAll"
-                            android:text="Request All Permissions" />
-            -->
+                                    <Button
+                                        android:id="@+id/btnCheckAllPermission"
+                                        style="@style/ButtonCommon"
+                                        android:layout_height="100dp"
+                                        android:onClick="requestAll"
+                                        android:text="Request All Permissions" />
+                        -->
 
                         <Button
                             android:id="@+id/btnStartFaceRecognition"
                             style="@style/ButtonCommon"
                             android:layout_height="100dp"
                             android:onClick="startFaceRecognition"
-                            android:text="Start Face Recognition" />
+                            android:text="얼굴인식 실행" />
 
                         <Button
                             android:id="@+id/btnStopFaceRecognition"
                             style="@style/ButtonCommon"
                             android:layout_height="100dp"
                             android:onClick="stopFaceRecognition"
-                            android:text="Stop Face Recognition" />
+                            android:text="얼굴인식 중지" />
 
 
                         <Button
