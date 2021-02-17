@@ -12,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.RemoteException;
 import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
@@ -76,11 +78,18 @@ import com.robotemi.sdk.sequence.OnSequencePlayStatusChangedListener;
 import com.robotemi.sdk.sequence.SequenceModel;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,6 +99,35 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import androidx.appcompat.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.webkit.URLUtil;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+//import com.kist.rest_api_test.R;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.net.HttpURLConnection;
+import java.lang.String;
+import java.util.*;
 /**
  * 2021-01-21 vol_1
  */
@@ -183,6 +221,153 @@ public class MainActivity extends AppCompatActivity implements
 
 
     public int nu=0;
+
+    // Debug log tag.
+    private static final String TAG_HTTP_URL_CONNECTION = "HTTP_URL_CONNECTION";
+
+    // Child thread sent message type value to activity main thread Handler.
+    private static final int REQUEST_CODE_SHOW_RESPONSE_TEXT = 1;
+
+    // The key of message stored server returned data.
+    private static final String KEY_RESPONSE_TEXT = "KEY_RESPONSE_TEXT";
+
+    // Request method GET. The value must be uppercase.
+    private static final String REQUEST_METHOD_GET = "GET";
+
+    // Request web page url input text box.
+    private EditText requestUrlEditor = null;
+
+    // Send http request button.
+    private Button requestUrlButton = null;
+
+    // TextView to display server returned page html text.
+    private TextView responseTextView = null;
+
+    // This handler used to listen to child thread show return page html text message and display those text in responseTextView.
+    private Handler uiUpdater = null;
+
+    private void startSendHttpRequestThread(final String reqUrl)
+    {
+        Thread sendHttpRequestThread = new Thread()
+        {
+            @Override
+            public void run() {
+                // Maintain http url connection.
+                HttpURLConnection httpConn = null;
+
+                // Read text input stream.
+                InputStreamReader isReader = null;
+
+                // Read text into buffer.
+                BufferedReader bufReader = null;
+
+                // Save server response text.
+                StringBuffer readTextBuf = new StringBuffer();
+
+                try {
+                    // Create a URL object use page url.
+                    // URL 설정
+                    //  URL url = new URL(reqUrl);
+                    URL url = new URL("http://3.36.128.133:1831/command/text_to_speech");
+
+
+                    // Open http connection to web server.
+                    httpConn = (HttpURLConnection)url.openConnection();
+
+                    // Set http request method to get.
+                    httpConn.setRequestMethod(REQUEST_METHOD_GET);
+
+                    // Set connection timeout and read timeout value.
+                    httpConn.setConnectTimeout(10000);
+                    httpConn.setReadTimeout(10000);
+
+                    // Get input stream from web url connection.
+                    InputStream inputStream = httpConn.getInputStream();
+
+                    // Create input stream reader based on url connection input stream.
+                    isReader = new InputStreamReader(inputStream);
+
+                    // Create buffered reader.
+                    bufReader = new BufferedReader(isReader);
+
+                    // Read line of text from server response.
+                    String line = bufReader.readLine();
+
+                    // Loop while return line is not null.
+                    while(line != null)
+                    {
+                        // Append the text to string buffer.
+                        readTextBuf.append(line);
+
+                        // Continue to read text line.
+                        line = bufReader.readLine();
+                    }
+
+                    // Send message to main thread to update response text in TextView after read all.
+                    Message message = new Message();
+
+                    // Set message type.
+                    message.what = REQUEST_CODE_SHOW_RESPONSE_TEXT;
+
+                    // Create a bundle object.
+                    Bundle bundle = new Bundle();
+                    // Put response text in the bundle with the special key.
+                    bundle.putString(KEY_RESPONSE_TEXT, readTextBuf.toString());
+                    // Set bundle data in message.
+                    message.setData(bundle);
+                    // Send message to main thread Handler to process.
+                  //  uiUpdater.sendMessage(message);
+
+
+                    String lin=readTextBuf.toString();
+
+                    if(lin.startsWith("{")) {
+                        JSONObject jobject=new JSONObject(lin);
+                        String function = jobject.getString("body");
+                        JSONObject jobject2=new JSONObject(function);
+                        String function2 = jobject2.getString("text");
+                        System.out.println(function);
+                        System.out.println(function2);
+                        TtsRequest ttsRequest = TtsRequest.create(function2.trim(), true);
+                        robot.speak(ttsRequest);
+
+                    }
+
+
+                }catch(MalformedURLException ex)
+                {
+                    Log.e(TAG_HTTP_URL_CONNECTION, ex.getMessage(), ex);
+                }catch(IOException ex)
+                {
+                    Log.e(TAG_HTTP_URL_CONNECTION, ex.getMessage(), ex);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (bufReader != null) {
+                            bufReader.close();
+                            bufReader = null;
+                        }
+
+                        if (isReader != null) {
+                            isReader.close();
+                            isReader = null;
+                        }
+
+                        if (httpConn != null) {
+                            httpConn.disconnect();
+                            httpConn = null;
+                        }
+                    }catch (IOException ex)
+                    {
+                        Log.e(TAG_HTTP_URL_CONNECTION, ex.getMessage(), ex);
+                    }
+                }
+            }
+        };
+        // Start the child thread to request web page.
+        sendHttpRequestThread.start();
+    }
 
 
 
@@ -431,10 +616,13 @@ public class MainActivity extends AppCompatActivity implements
         call=null;
         sig=null;
         recog=null;
-            TtsRequest ttsRequest4 = TtsRequest.create("대화가 초기화 되었습니다. 처음부터 재입력 해주세요", true);
-            robot.speak(ttsRequest4);
+
+          //  TtsRequest ttsRequest4 = TtsRequest.create("대화가 초기화 되었습니다. 처음부터 재입력 해주세요", true);
+           // robot.speak(ttsRequest4);
 
             hideKeyboard();
+        String reqUrl=null;
+        startSendHttpRequestThread(reqUrl);
     }
 
     /**
@@ -719,6 +907,7 @@ public class MainActivity extends AppCompatActivity implements
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
 
                 if(sig!=null) {
                     receive = 1;
