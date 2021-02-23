@@ -86,6 +86,21 @@
                 style="@style/ButtonCommon"
                 android:onClick="goTo3"
                 android:text="대화 처음부터 하기" />
+            <Button
+                android:id="@+id/btnGoTo4"
+                style="@style/ButtonCommon"
+                android:onClick="goTo4"
+                android:text="GET" />
+            <Button
+                android:id="@+id/btnGoTo5"
+                style="@style/ButtonCommon"
+                android:onClick="goTo5"
+                android:text="POST" />
+            <Button
+                android:id="@+id/btnGoTo6"
+                style="@style/ButtonCommon"
+                android:onClick="goTo6"
+                android:text="명령 후 자동복귀" />
 
 
 

@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -87,6 +88,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -207,6 +209,8 @@ public class MainActivity extends AppCompatActivity implements
     public String retu=null;
     public String home="home base";
     public int tier=0;
+    public String auto="off";
+    public String abc="홈베이스로 복귀 하겠습니다.";
 
     public String sig=null;
     public String sender=null;
@@ -218,6 +222,9 @@ public class MainActivity extends AppCompatActivity implements
     public String user6="교차로";
     public String user7="중앙";
     //public String user8="8226";
+
+    int m_nTimeOutConnection = 5000;
+    int m_nTimeOutRead = 5000;
 
 
     public int nu=0;
@@ -268,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements
                     // Create a URL object use page url.
                     // URL 설정
                     //  URL url = new URL(reqUrl);
-                    URL url = new URL("http://3.36.128.133:1831/command/text_to_speech");
+                    URL url = new URL("http://3.36.128.133:2416/command/text_to_speech");
 
 
                     // Open http connection to web server.
@@ -320,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
                     String lin=readTextBuf.toString();
+                    System.out.println(lin);
 
                     if(lin.startsWith("{")) {
                         JSONObject jobject=new JSONObject(lin);
@@ -368,6 +376,55 @@ public class MainActivity extends AppCompatActivity implements
         // Start the child thread to request web page.
         sendHttpRequestThread.start();
     }
+
+
+    public String _post(String strBaseURL, String strPath, String strMessage) {
+        Log.e("POST:_post", strMessage);
+        String strResponse = "";
+
+        try {
+            URL url = new URL(strBaseURL + strPath);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            con.setConnectTimeout(m_nTimeOutConnection); //서버에 연결되는 Timeout 시간 설정
+            con.setReadTimeout(m_nTimeOutRead); // InputStream 읽어 오는 Timeout 시간 설정
+            // con.addRequestProperty("x-api-key", RestTestCommon.API_KEY); //key값 설정
+
+            con.setRequestMethod("POST");
+            con.setDoOutput(true); //POST 데이터를 OutputStream으로 넘겨 주겠다는 설정
+
+            //json으로 message를 전달하고자 할 때
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoInput(true);
+            con.setUseCaches(false);
+            con.setDefaultUseCaches(false);
+
+            OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+            wr.write(strMessage); //json 형식의 message 전달
+            wr.flush();
+
+            StringBuilder sb = new StringBuilder();
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+                br.close();
+
+                strResponse = sb.toString();
+                //         Log.e("GET:HTTP_OK", "" + sb.toString());
+            } else {
+                Log.e("POST:Else", con.getResponseMessage());
+            }
+        } catch (Exception e){
+            Log.e("POST:Exception", e.toString());
+        }
+
+        return strResponse;
+    }
+
 
 
 
@@ -595,6 +652,7 @@ public class MainActivity extends AppCompatActivity implements
         hideKeyboard();
     }
 
+
     public void goTo3(View view) {
         // nu=0;
         /*
@@ -617,13 +675,110 @@ public class MainActivity extends AppCompatActivity implements
         sig=null;
         recog=null;
 
-          //  TtsRequest ttsRequest4 = TtsRequest.create("대화가 초기화 되었습니다. 처음부터 재입력 해주세요", true);
-           // robot.speak(ttsRequest4);
+        //  TtsRequest ttsRequest4 = TtsRequest.create("대화가 초기화 되었습니다. 처음부터 재입력 해주세요", true);
+        // robot.speak(ttsRequest4);
 
-            hideKeyboard();
+        hideKeyboard();
+
+    }
+
+    public void goTo4(View view) {
+        // nu=0;
+        /*
+        for (String location : robot.getLocations()) {
+            if (location.equals(etGoTo.getText().toString().toLowerCase().trim())) {
+                //nu++;
+
+                robot.goTo(etGoTo.getText().toString().toLowerCase().trim());
+
+                hideKeyboard();
+            }
+        }
+        */
+        // sender=etGoTo.getText().toString();
+        tier=0;
+        receive=0;
+        sentance=null;
+        message=null;
+        call=null;
+        sig=null;
+        recog=null;
+
+        //  TtsRequest ttsRequest4 = TtsRequest.create("대화가 초기화 되었습니다. 처음부터 재입력 해주세요", true);
+        // robot.speak(ttsRequest4);
+
+        hideKeyboard();
         String reqUrl=null;
         startSendHttpRequestThread(reqUrl);
     }
+
+    public void goTo5(View view) {
+        // nu=0;
+        /*
+        for (String location : robot.getLocations()) {
+            if (location.equals(etGoTo.getText().toString().toLowerCase().trim())) {
+                //nu++;
+
+                robot.goTo(etGoTo.getText().toString().toLowerCase().trim());
+
+                hideKeyboard();
+            }
+        }
+        */
+        // sender=etGoTo.getText().toString();
+        tier=0;
+        receive=0;
+        sentance=null;
+        message=null;
+        call=null;
+        sig=null;
+        recog=null;
+
+        //  TtsRequest ttsRequest4 = TtsRequest.create("대화가 초기화 되었습니다. 처음부터 재입력 해주세요", true);
+        // robot.speak(ttsRequest4);
+
+        hideKeyboard();
+
+
+
+        String post= "{\"header\":{\"time\":\"02:16:51\",\"module\":\"sound_to_text\"},\"body\":{\"text\":\"마이봄\"}}";
+
+       String respon= _post("http://3.36.128.133:2416","sensor_data/sound_to_text",post);
+       if(respon==null){
+           String stand="반응이 없습니다.";
+           TtsRequest ttsRequest7 = TtsRequest.create(stand.trim(), true);
+           robot.speak(ttsRequest7);
+           System.out.println(stand);
+       }
+        TtsRequest ttsRequest6 = TtsRequest.create(respon.trim(), true);
+        robot.speak(ttsRequest6);
+    }
+
+    public void goTo6(View view) {
+        if(auto=="on"){
+            auto="off";
+            printLog("자동 복귀 기능 OFF");
+        }
+        else{
+            auto="on";
+            printLog("자동 복귀 기능 ON");
+        }
+
+        tier=0;
+        receive=0;
+        sentance=null;
+        message=null;
+        call=null;
+        sig=null;
+        recog=null;
+
+
+
+
+
+        hideKeyboard();
+    }
+
 
     /**
      * stopMovement() is used whenever you want the robot to stop any movement
@@ -910,12 +1065,46 @@ public class MainActivity extends AppCompatActivity implements
 
 
                 if(sig!=null) {
-                    receive = 1;
-                    TtsRequest ttsRequest1 = TtsRequest.create(call, true);
-                    robot.speak(ttsRequest1);
-                    sig=null;
+
+                        receive = 1;
+                        TtsRequest ttsRequest1 = TtsRequest.create(call, true);
+                        robot.speak(ttsRequest1);
+                        sig = null;
+                        call = null;
+                        hideKeyboard();
+
+
+
+                }
+
+                if(auto=="on"){
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    TtsRequest ttsRequest2 = TtsRequest.create(sentance+message+abc, true);
+                    robot.speak(ttsRequest2);
+
+                    sig = null;
                     call=null;
-                    hideKeyboard();
+                    tier=0;
+                    receive=0;
+                    sentance=null;
+                    message=null;
+                    recog=null;
+
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    auto="off";
+
+
+                    robot.goTo(home.trim());
                 }
 
               //  sentance=null;
