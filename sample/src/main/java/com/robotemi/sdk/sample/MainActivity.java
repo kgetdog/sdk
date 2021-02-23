@@ -226,6 +226,8 @@ public class MainActivity extends AppCompatActivity implements
     int m_nTimeOutConnection = 5000;
     int m_nTimeOutRead = 5000;
 
+    public String postan=null;
+
 
     public int nu=0;
 
@@ -375,6 +377,177 @@ public class MainActivity extends AppCompatActivity implements
         };
         // Start the child thread to request web page.
         sendHttpRequestThread.start();
+    }
+
+    private void startSendHttpRequestThread2(final String reqUrl)
+    {
+        Thread sendHttpRequestThread2 = new Thread()
+        {
+            @Override
+            public void run() {
+                // Maintain http url connection.
+                HttpURLConnection httpConn = null;
+
+                // Read text input stream.
+                InputStreamReader isReader = null;
+
+                // Read text into buffer.
+                BufferedReader bufReader = null;
+
+                // Save server response text.
+                StringBuffer readTextBuf = new StringBuffer();
+
+                try {
+                    // Create a URL object use page url.
+                    // URL 설정
+                    //  URL url = new URL(reqUrl);
+                    URL url = new URL("http://3.36.128.133:2416/sensor_data/sound_to_text");
+
+
+                    // Open http connection to web server.
+                    httpConn = (HttpURLConnection)url.openConnection();
+
+                    // Set http request method to get.
+                   // httpConn.setRequestMethod(REQUEST_METHOD_GET);
+
+                    // Set connection timeout and read timeout value.
+                    httpConn.setConnectTimeout(10000);
+                    httpConn.setReadTimeout(10000);
+
+                    httpConn.setRequestMethod("POST");
+                    httpConn.setDoOutput(true);
+
+
+
+
+                    //json으로 message를 전달하고자 할 때
+                    httpConn.setRequestProperty("Content-Type", "application/json");
+                    httpConn.setDoInput(true);
+                    httpConn.setUseCaches(false);
+                    httpConn.setDefaultUseCaches(false);
+                    String strMessage= "{\"header\":{\"time\":\"02:16:51\",\"module\":\"sound_to_text\"},\"body\":{\"text\":\"마이봄\"}}";
+
+
+
+                    OutputStreamWriter wr = new OutputStreamWriter(httpConn.getOutputStream());
+                    wr.write(strMessage); //json 형식의 message 전달
+                    wr.flush();
+
+                    StringBuilder sb = new StringBuilder();
+                    if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        BufferedReader br = new BufferedReader(new InputStreamReader(httpConn.getInputStream(), "utf-8"));
+
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            sb.append(line).append("\n");
+                        }
+                        br.close();
+
+                        postan = sb.toString();
+                        //         Log.e("GET:HTTP_OK", "" + sb.toString());
+                    } else {
+                        Log.e("POST:Else", httpConn.getResponseMessage());
+                    }
+                } catch (Exception e){
+                    Log.e("POST:Exception", e.toString());
+                }
+
+
+
+
+
+/*
+
+
+                // Get input stream from web url connection.
+                    InputStream inputStream = httpConn.getInputStream();
+
+                    // Create input stream reader based on url connection input stream.
+                    isReader = new InputStreamReader(inputStream);
+
+                    // Create buffered reader.
+                    bufReader = new BufferedReader(isReader);
+
+                    // Read line of text from server response.
+                    String line = bufReader.readLine();
+
+                    // Loop while return line is not null.
+                    while(line != null)
+                    {
+                        // Append the text to string buffer.
+                        readTextBuf.append(line);
+
+                        // Continue to read text line.
+                        line = bufReader.readLine();
+                    }
+
+                    // Send message to main thread to update response text in TextView after read all.
+                    Message message = new Message();
+
+                    // Set message type.
+                    message.what = REQUEST_CODE_SHOW_RESPONSE_TEXT;
+
+                    // Create a bundle object.
+                    Bundle bundle = new Bundle();
+                    // Put response text in the bundle with the special key.
+                    bundle.putString(KEY_RESPONSE_TEXT, readTextBuf.toString());
+                    // Set bundle data in message.
+                    message.setData(bundle);
+                    // Send message to main thread Handler to process.
+                    //  uiUpdater.sendMessage(message);
+
+
+                    String lin=readTextBuf.toString();
+                    System.out.println(lin);
+
+                    if(lin.startsWith("{")) {
+                        JSONObject jobject=new JSONObject(lin);
+                        String function = jobject.getString("body");
+                        JSONObject jobject2=new JSONObject(function);
+                        String function2 = jobject2.getString("text");
+                        System.out.println(function);
+                        System.out.println(function2);
+                        TtsRequest ttsRequest = TtsRequest.create(function2.trim(), true);
+                        robot.speak(ttsRequest);
+
+                    }
+
+
+                }catch(MalformedURLException ex)
+                {
+                    Log.e(TAG_HTTP_URL_CONNECTION, ex.getMessage(), ex);
+                }catch(IOException ex)
+                {
+                    Log.e(TAG_HTTP_URL_CONNECTION, ex.getMessage(), ex);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (bufReader != null) {
+                            bufReader.close();
+                            bufReader = null;
+                        }
+
+                        if (isReader != null) {
+                            isReader.close();
+                            isReader = null;
+                        }
+
+                        if (httpConn != null) {
+                            httpConn.disconnect();
+                            httpConn = null;
+                        }
+                    }catch (IOException ex)
+                    {
+                        Log.e(TAG_HTTP_URL_CONNECTION, ex.getMessage(), ex);
+                    }
+                }
+
+                */
+            }
+        };
+        // Start the child thread to request web page.
+        sendHttpRequestThread2.start();
     }
 
 
@@ -739,7 +912,7 @@ public class MainActivity extends AppCompatActivity implements
 
         hideKeyboard();
 
-
+/*
 
         String post= "{\"header\":{\"time\":\"02:16:51\",\"module\":\"sound_to_text\"},\"body\":{\"text\":\"마이봄\"}}";
 
@@ -752,6 +925,9 @@ public class MainActivity extends AppCompatActivity implements
        }
         TtsRequest ttsRequest6 = TtsRequest.create(respon.trim(), true);
         robot.speak(ttsRequest6);
+        */
+        String reqUrl=null;
+        startSendHttpRequestThread2(reqUrl);
     }
 
     public void goTo6(View view) {
