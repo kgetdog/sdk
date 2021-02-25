@@ -401,11 +401,11 @@ public class MainActivity extends AppCompatActivity implements
                     // Create a URL object use page url.
                     // URL 설정
                     //  URL url = new URL(reqUrl);
-                    URL url = new URL("http://3.36.128.133:2416/sensor_data/sound_to_text");
+                    URL url2 = new URL("http://3.36.128.133:2416/sensor_data/sound_to_text");
 
 
                     // Open http connection to web server.
-                    httpConn = (HttpURLConnection)url.openConnection();
+                    httpConn = (HttpURLConnection)url2.openConnection();
 
                     // Set http request method to get.
                    // httpConn.setRequestMethod(REQUEST_METHOD_GET);
@@ -430,11 +430,13 @@ public class MainActivity extends AppCompatActivity implements
 
 
                     OutputStreamWriter wr = new OutputStreamWriter(httpConn.getOutputStream());
+                    printLog("ok");
                     wr.write(strMessage); //json 형식의 message 전달
                     wr.flush();
 
                     StringBuilder sb = new StringBuilder();
                     if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
                         BufferedReader br = new BufferedReader(new InputStreamReader(httpConn.getInputStream(), "utf-8"));
 
                         String line;
@@ -847,6 +849,7 @@ public class MainActivity extends AppCompatActivity implements
         call=null;
         sig=null;
         recog=null;
+        printLog("대화가 초기화 되었습니다. 처음부터 진행해 주세요");
 
         //  TtsRequest ttsRequest4 = TtsRequest.create("대화가 초기화 되었습니다. 처음부터 재입력 해주세요", true);
         // robot.speak(ttsRequest4);
